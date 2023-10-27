@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
 import './App.css';
 import Container from './Container'
+import axios from 'axios'
 
 const App: React.FC = () => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [newItems, setNewItems] = useState<number[]>([1, 2, 3]);
   const [page, setPage] = useState(0);
+
+
+  
+  // callback関数を定義
   const intersectCallback = (index: number) => {
     console.log('intersectCallback',index)
     if (index === 3) {
-      // 3までスクロールされたときに新しい要素を追加
+      const test = axios.get('https://jsonplaceholder.typicode.com/posts?_page=1&_limit=10')
+      .then(response => {
+        // APIリクエストが成功した場合の処理
+        // レスポンスデータを使用して必要な処理を実行
+        // ここでは、setNewItemsを呼び出して新しいアイテムを追加する例を示します。
+        console.log('response',response.data)
+        return response.data
+      })
+      console.log('test',test)
       setNewItems((prevItems) => [...prevItems, 4, 5]);
     }
     setPage(index);
@@ -28,8 +41,9 @@ const App: React.FC = () => {
         zIndex: 1000, // 他の要素より手前に表示
         /* その他のスタイルプロパティを適用 */
       }}>{page} まで読んだ</header>
+      <div style={{paddingTop:"200px"}}></div>
       {newItems.map((i) => (
-  <Container index={i} onIntersection={intersectCallback}>
+  <Container index={i} onIntersection={intersectCallback} >
     <div ref={ref} key={i} className="contents" style={{fontSize:"20pt"}}>
       {i}
     </div>
