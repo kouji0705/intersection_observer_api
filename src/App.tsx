@@ -4,13 +4,16 @@ import Container from './Container'
 
 const App: React.FC = () => {
   const ref = React.useRef<HTMLDivElement>(null);
+  const [newItems, setNewItems] = useState<number[]>([1, 2, 3]);
   const [page, setPage] = useState(0);
   const intersectCallback = (index: number) => {
     console.log('intersectCallback',index)
+    if (index === 3) {
+      // 3までスクロールされたときに新しい要素を追加
+      setNewItems((prevItems) => [...prevItems, 4, 5]);
+    }
     setPage(index);
   };
-
-  const items = [1, 2, 3];
 
   return (
     <div>
@@ -25,14 +28,13 @@ const App: React.FC = () => {
         zIndex: 1000, // 他の要素より手前に表示
         /* その他のスタイルプロパティを適用 */
       }}>{page} まで読んだ</header>
-      {items.map((i) => (
-        <Container index={i} onIntersection={intersectCallback}>
-          <div ref={ref} key={i} className="contents">
-            {i}
-          </div>
-        </Container>
-      ))}
+      {newItems.map((i) => (
+  <Container index={i} onIntersection={intersectCallback}>
+    <div ref={ref} key={i} className="contents" style={{fontSize:"20pt"}}>
+      {i}
     </div>
+  </Container>
+))}    </div>
   );
 };
 
