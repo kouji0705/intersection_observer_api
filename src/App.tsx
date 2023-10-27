@@ -2,28 +2,31 @@ import React, { useState } from 'react';
 import './App.css';
 import Container from './Container'
 import axios from 'axios'
+import { Post } from './types'
 
 const App: React.FC = () => {
   const ref = React.useRef<HTMLDivElement>(null);
-  const [newItems, setNewItems] = useState<number[]>([1, 2, 3]);
+  // const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?_page=0&_limit=10`)
+  const [newItems, setNewItems] = useState<Post[]>([{
+    userId: 1,
+    id: 1,
+    title: "タイトル",
+    body: "本文"
+  }]);
   const [page, setPage] = useState(0);
 
-
-  
   // callback関数を定義
-  const intersectCallback = (index: number) => {
+  const intersectCallback = async (index: number) => {
     console.log('intersectCallback',index)
     if (index === 3) {
-      const test = axios.get('https://jsonplaceholder.typicode.com/posts?_page=1&_limit=10')
-      .then(response => {
-        // APIリクエストが成功した場合の処理
-        // レスポンスデータを使用して必要な処理を実行
-        // ここでは、setNewItemsを呼び出して新しいアイテムを追加する例を示します。
-        console.log('response',response.data)
-        return response.data
-      })
-      console.log('test',test)
-      setNewItems((prevItems) => [...prevItems, 4, 5]);
+      try {
+        const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?_page=${index}&_limit=10`);
+        console.log('response', response.data);
+        // setNewItems((prevItems) => [...prevItems, 4, 5]);
+        setNewItems((prevItems) => [...prevItems]);
+      } catch (error) {
+        console.error('APIリクエストエラー:', error);
+      }
     }
     setPage(index);
   };
@@ -42,10 +45,12 @@ const App: React.FC = () => {
         /* その他のスタイルプロパティを適用 */
       }}>{page} まで読んだ</header>
       <div style={{paddingTop:"200px"}}></div>
-      {newItems.map((i) => (
-  <Container index={i} onIntersection={intersectCallback} >
-    <div ref={ref} key={i} className="contents" style={{fontSize:"20pt"}}>
-      {i}
+      {newItems.map((post) => (
+  <Container index={post.id} onIntersection={intersectCallback} >
+    <div ref={ref} key={post.id} className="contents" style={{fontSize:"20pt"}}>
+      {post.id}<br/>
+      {post.title}<br/>
+      {post.body}<br/>
     </div>
   </Container>
 ))}    </div>
