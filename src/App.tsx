@@ -4,11 +4,10 @@ import Container from './Container'
 
 const App: React.FC = () => {
   const ref = React.useRef<HTMLDivElement>(null);
-  // const [progress, setProgress] = useState(0);
-  const [progress, setProgress] = useState(0);
+  const [page, setPage] = useState(0);
   const intersectCallback = (index: number) => {
     console.log('intersectCallback',index)
-    setProgress(index);
+    setPage(index);
   };
 
   const items = [1, 2, 3];
@@ -25,7 +24,7 @@ const App: React.FC = () => {
         padding: '10px', // パディング
         zIndex: 1000, // 他の要素より手前に表示
         /* その他のスタイルプロパティを適用 */
-      }}>{progress} まで読んだ</header>
+      }}>{page} まで読んだ</header>
       {items.map((i) => (
         <Container index={i} onIntersection={intersectCallback}>
           <div ref={ref} key={i} className="contents">
