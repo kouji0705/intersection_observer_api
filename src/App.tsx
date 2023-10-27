@@ -6,7 +6,6 @@ import { Post } from './types'
 
 const App: React.FC = () => {
   const ref = React.useRef<HTMLDivElement>(null);
-  // const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?_page=0&_limit=10`)
   const [newItems, setNewItems] = useState<Post[]>([{
     userId: 1,
     id: 1,
@@ -18,15 +17,13 @@ const App: React.FC = () => {
   // callback関数を定義
   const intersectCallback = async (index: number) => {
     console.log('intersectCallback',index)
-    if (index === 3) {
+      index = index + 1;
       try {
-        const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?_page=${index}&_limit=10`);
+        const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?_page=${index}&_limit=5`);
         console.log('response', response.data);
-        // setNewItems((prevItems) => [...prevItems, 4, 5]);
-        setNewItems((prevItems) => [...prevItems]);
+        setNewItems((prevItems) => [...prevItems, ...response.data]);
       } catch (error) {
         console.error('APIリクエストエラー:', error);
-      }
     }
     setPage(index);
   };
